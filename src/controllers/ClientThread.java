@@ -1,5 +1,6 @@
 package controllers;
 
+import livestream.models.BaseRequest;
 import livestream.models.User;
 
 import java.io.IOException;
@@ -32,11 +33,21 @@ public class ClientThread extends Thread {
             mObjectOutputStream = new ObjectOutputStream(mClientSocket.getOutputStream());
 
             while (true) {
-                User o = (User) mObjectInputStream.readObject();
-                if (o != null) {
-                    System.out.println(o.getName());
+                BaseRequest baseRequest = (BaseRequest) mObjectInputStream.readObject();
+                if (baseRequest != null) {
+                    switch (baseRequest.getTypeRequest()) {
+                        case 0:
+                            loginAccount((User) baseRequest.getData());
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        default:
+                            break;
+                    }
                 } else {
-                    System.out.println("null");
+                    System.out.println(mClientSocket.getRemoteSocketAddress() + " send wrong data format");
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -64,5 +75,9 @@ public class ClientThread extends Thread {
 
         mServer.removeClientSocket(getName());
         System.out.println("Client remote address: " + mClientSocket.getRemoteSocketAddress() + " disconnected");
+    }
+
+    private void loginAccount(User user) {
+        System.out.println(user.getName() + " " + user.getPassword());
     }
 }
