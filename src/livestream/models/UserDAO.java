@@ -130,4 +130,23 @@ public class UserDAO extends BaseDAO {
 
         return null;
     }
+
+    public User editUserById(int userId, String newName, String newPassword) throws SQLException {
+        PreparedStatement ps = this.preparedStatement(
+                "UPDATE `users`" +
+                        "SET name = IF(CHAR_LENGTH(?), ?, name), password = IF(CHAR_LENGTH(?), ?, password)" +
+                        "WHERE id = ?"
+        );
+        ps.setString(1, newName);
+        ps.setString(2, newName);
+        ps.setString(3, newPassword);
+        ps.setString(4, UserDAO.sha1Encrypt(newPassword));
+        ps.setInt(5, userId);
+
+        if (ps.executeUpdate() > 0) {
+            return getUserById(userId);
+        }
+
+        return null;
+    }
 }
