@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class RoomUserDAO extends BaseDAO {
     public RoomUserDAO() {}
 
-    public boolean checkUserAlreadyInRoom(int roomId, int userId) throws SQLException {
+    public int checkUserAlreadyInRoom(int roomId, int userId) throws SQLException {
         PreparedStatement ps = this.preparedStatement(
                 "SELECT * FROM `room_users`" +
                         "WHERE room_id = ? AND user_id = ?" +
@@ -19,10 +19,10 @@ public class RoomUserDAO extends BaseDAO {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            return true;
+            return rs.getInt("id");
         }
 
-        return false;
+        return 0;
     }
 
     public int addUserToRoom(int roomId, int userId, int invitor_id, int request_status, int status) throws SQLException {
@@ -44,5 +44,29 @@ public class RoomUserDAO extends BaseDAO {
         }
 
         return 0;
+    }
+
+    public boolean updateRoomUserStatus(int rowId, int newStatus) throws SQLException {
+        PreparedStatement ps = this.preparedStatement(
+                "UPDATE `room_users`" +
+                        "SET status = " +
+                        "WHERE id = ?"
+        );
+        ps.setInt(1, newStatus);
+        ps.setInt(2, rowId);
+
+        return ps.executeUpdate() > 0;
+    }
+
+    public boolean updateRoomUserRequestStatus(int rowId, int newReqStatus) throws SQLException {
+        PreparedStatement ps = this.preparedStatement(
+                "UPDATE `room_users`" +
+                        "SET request_status = " +
+                        "WHERE id = ?"
+        );
+        ps.setInt(1, newReqStatus);
+        ps.setInt(2, rowId);
+
+        return ps.executeUpdate() > 0;
     }
 }
