@@ -55,13 +55,14 @@ public class ClientThread extends Thread {
                                 mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register success",null));
                             }
                             break;
-                        /** Get all user ( return Arraylist ) **/
+                        /** Get all user **/
                         case 2:
+                            ArrayList<User> allUser = getAllUser();
                             if (getAllUser() != null) {
-                                AllUser allUser = new AllUser(getAllUser());
                                 mObjectOutputStream.writeObject(new BaseRequest<>(2,"Success",allUser));
                             }
                             break;
+                        /** Create new room **/
                         case 3:
                             if (createNewRoom((Room) baseRequest.getData()) == 0){
                                 mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create failed",null));
@@ -72,6 +73,25 @@ public class ClientThread extends Thread {
                                     mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create failed",null));
                                 }
                             }
+                            break;
+                        /** Get active rooms **/
+                        case 4:
+                            ArrayList<Room> activeRooms = getActiveRoom();
+                            if(activeRooms != null) {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(4,"Success",activeRooms));
+                            } else {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(4,"Failed",null));
+                            }
+                            break;
+                        /** Get all rooms **/
+                        case 5 :
+                            ArrayList<Room> allRooms = getAllRoom();
+                            if (allRooms.size() == 0) {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(5,"Failed",null));
+                            } else {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(5,"Success",allRooms));
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -159,5 +179,32 @@ public class ClientThread extends Thread {
             e.printStackTrace();
         }
         return null;
+    }
+
+
+    private ArrayList<Room> getActiveRoom() {
+        try {
+            return new RoomDAO().getAllRooms(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private ArrayList<Room> getAllRoom() {
+        ArrayList<Room> allRooms = new ArrayList<>();
+        try {
+            ArrayList<Room> activeRooms = new RoomDAO().getAllRooms(1);
+            ArrayList<Room> dectiveRooms = new RoomDAO().getAllRooms(0);
+            if (activeRooms != null) {
+                allRooms.addAll(activeRooms);
+            }
+            if (dectiveRooms != null) {
+                allRooms.addAll(dectiveRooms);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return allRooms;
     }
 }
