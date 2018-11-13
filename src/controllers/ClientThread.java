@@ -187,11 +187,11 @@ public class ClientThread extends Thread {
     private User loginAccount(User user) {
         System.out.println(user.getName() + " " + user.getPassword());
         try {
-            new UserDAO().getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+            return new UserDAO().getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+        return null;
     }
 
     private int registerAccount(User user) {
