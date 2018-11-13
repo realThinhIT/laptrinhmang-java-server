@@ -1,6 +1,6 @@
 package controllers;
 
-import models.User;
+import livestream.models.User;
 
 import java.io.IOException;
 import java.net.ServerSocket;

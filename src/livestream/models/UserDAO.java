@@ -1,8 +1,7 @@
-package models;
+package livestream.models;
 
 import exception.UserDAOException;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;

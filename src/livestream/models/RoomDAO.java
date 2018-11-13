@@ -1,4 +1,4 @@
-package models;
+package livestream.models;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

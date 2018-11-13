@@ -1,5 +1,7 @@
 package controllers;
 
+import livestream.models.User;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -30,9 +32,9 @@ public class ClientThread extends Thread {
             mObjectOutputStream = new ObjectOutputStream(mClientSocket.getOutputStream());
 
             while (true) {
-                String o = (String) mObjectInputStream.readObject();
+                User o = (User) mObjectInputStream.readObject();
                 if (o != null) {
-                    System.out.println(o);
+                    System.out.println(o.getName());
                 } else {
                     System.out.println("null");
                 }
