@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,11 +19,13 @@ public class ClientThread extends Thread {
     private Server mServer;
     private ObjectInputStream mObjectInputStream;
     private ObjectOutputStream mObjectOutputStream;
+    private MessageCallBack mMessageCallback;
 
-    public ClientThread(Socket s, Server server) {
+    public ClientThread(Socket s, Server server, MessageCallBack messageCallBack) {
         super(s.getInetAddress().getHostAddress());
         mClientSocket = s;
         mServer = server;
+        mMessageCallback = messageCallBack;
         System.out.println("Client Remote Address: " + mClientSocket.getRemoteSocketAddress().toString() + " connected");
     }
 
@@ -123,11 +126,14 @@ public class ClientThread extends Thread {
                             break;
                         /** Create new message *
                          * RequestedObj: RoomMessage
-                         * ReturnedObj: null
+                         * ReturnedObj: RoomMessage
                          * */
                         case 7 :
-                            if (createNewMessage((RoomMessage) baseRequest.getData()) > 0) {
-                                mObjectOutputStream.writeObject(new BaseRequest<>(7,"Create success",null));
+                            RoomMessage newMessage = createNewMessage((RoomMessage) baseRequest.getData());
+                            Room room = getRoomById(newMessage.getmRoomId());
+                            if (newMessage != null && room != null) {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(7,"Create success",newMessage));
+                                mMessageCallback.call(room.getRoomUsers(), newMessage);
                             } else {
                                 mObjectOutputStream.writeObject(new BaseRequest<>(7,"Create failed",null));
                             }
@@ -269,13 +275,13 @@ public class ClientThread extends Thread {
         return false;
     }
 
-    private int createNewMessage(RoomMessage message) {
+    private RoomMessage createNewMessage(RoomMessage message) {
         try {
             return new RoomMessageDAO().createNewMessageInRoom(message.getmRoomId(),message.getUser().getId(),message.getContent());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return null;
     }
 
     private ArrayList<RoomMessage> getAllMessages(Room room) {
@@ -285,5 +291,17 @@ public class ClientThread extends Thread {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void pingNewMessage(RoomMessage roomMessage) {
+        try {
+            mObjectOutputStream.writeObject(new BaseRequest<>(8,"New message",roomMessage));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    interface MessageCallBack {
+        void call(List<RoomUser> userList, RoomMessage roomMessage);
     }
 }
