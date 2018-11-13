@@ -20,6 +20,7 @@ public class ClientThread extends Thread {
     private ObjectInputStream mObjectInputStream;
     private ObjectOutputStream mObjectOutputStream;
     private MessageCallBack mMessageCallback;
+    private boolean isExisted = false;
 
     public ClientThread(Socket s, Server server, MessageCallBack messageCallBack) {
         super(s.getInetAddress().getHostAddress());
@@ -59,9 +60,11 @@ public class ClientThread extends Thread {
                          *  */
                         case 1 :
                             if (registerAccount((User) baseRequest.getData()) == 0) {
-                                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register failed",null));
-                            } else if (registerAccount((User) baseRequest.getData()) == -1) {
-                                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Username is already registered",null));
+                                if (isExisted) {
+                                    mObjectOutputStream.writeObject(new BaseRequest<>(1,"Username is already registered",null));
+                                } else {
+                                    mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register failed",null));
+                                }
                             } else {
                                 mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register success",null));
                             }
@@ -198,13 +201,14 @@ public class ClientThread extends Thread {
 
     private int registerAccount(User user) {
         System.out.println(user.getName() + " " + user.getPassword());
+        isExisted = false;
         try {
             return new UserDAO().createNewUser(user.getUsername(), user.getPassword(), user.getName());
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (UserDAOException e) {
+            isExisted = true;
             e.printStackTrace();
-            return -1;
         }
         return 0;
     }
