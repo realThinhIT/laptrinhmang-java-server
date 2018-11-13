@@ -20,6 +20,7 @@ public class ClientThread extends Thread {
     private ObjectInputStream mObjectInputStream;
     private ObjectOutputStream mObjectOutputStream;
     private MessageCallBack mMessageCallback;
+    private boolean isExisted = false;
 
     public ClientThread(Socket s, Server server, MessageCallBack messageCallBack) {
         super(s.getInetAddress().getHostAddress());
@@ -59,7 +60,11 @@ public class ClientThread extends Thread {
                          *  */
                         case 1 :
                             if (registerAccount((User) baseRequest.getData()) == 0) {
-                                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register failed",null));
+                                if (isExisted) {
+                                    mObjectOutputStream.writeObject(new BaseRequest<>(1,"Username is already registered",null));
+                                } else {
+                                    mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register failed",null));
+                                }
                             } else {
                                 mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register success",null));
                             }
@@ -187,26 +192,22 @@ public class ClientThread extends Thread {
     private User loginAccount(User user) {
         System.out.println(user.getName() + " " + user.getPassword());
         try {
-            new UserDAO().getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+            return new UserDAO().getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return user;
+        return null;
     }
 
     private int registerAccount(User user) {
         System.out.println(user.getName() + " " + user.getPassword());
+        isExisted = false;
         try {
             return new UserDAO().createNewUser(user.getUsername(), user.getPassword(), user.getName());
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (UserDAOException e) {
-            try {
-                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Username is already registered",null));
-                return 0;
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            isExisted = true;
             e.printStackTrace();
         }
         return 0;
