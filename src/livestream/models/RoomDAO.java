@@ -35,7 +35,7 @@ public class RoomDAO extends BaseDAO {
 
         PreparedStatement ps = preparedStatement(
                 "SELECT * FROM `rooms`" +
-                        "WHERE `status` = *"
+                        "WHERE `status` = ?"
         );
         ps.setInt(1, roomStatus);
 
