@@ -12,16 +12,30 @@ public class ConnectionUtils {
         return MySQLConnUtils.getMySQLConnection();
     }
 
-    //
-    // Test Connection ...
-    //
-    public static void main(String[] args) throws SQLException,
-            ClassNotFoundException {
+    public static void main(String[] args) {
 
         System.out.println("Get connection ... ");
 
         // Lấy ra đối tượng Connection kết nối vào database.
-        db = ConnectionUtils.getMyConnection();
+        try {
+
+            db = ConnectionUtils.getMyConnection();
+
+            System.out.println("Get connection " + db);
+
+            System.out.println("Done!");
+
+            System.out.println("Waiting client connect...");
+
+            startServer();
+        } catch (SQLException | ClassNotFoundException e) {
+            System.out.println("\n------- Loi server -------\n" + e.getMessage() + "\n --------------------- \n");
+        }
     }
 
+    private static void startServer() {
+        Server server = new Server();
+        server.openServer();
+        server.listening();
+    }
 }

@@ -6,38 +6,18 @@ import java.sql.SQLException;
 
 public class MySQLConnUtils {
 
-    private static Connection singleton;
-
-    // Kết nối vào MySQL.
-    public static Connection getMySQLConnection() throws SQLException,
-            ClassNotFoundException {
+    public static Connection getMySQLConnection() throws SQLException, ClassNotFoundException {
         String hostName = "207.148.78.251";
-
         String dbName = "laptrinhmang";
         String userName = "root";
         String password = "4t2z6z6u";
-
         return getMySQLConnection(hostName, dbName, userName, password);
     }
 
     public static Connection getMySQLConnection(String hostName, String dbName,
-                                                String userName, String password) throws SQLException,
-            ClassNotFoundException {
-        if (singleton == null) {
-
-            // Khai báo class Driver cho DB MySQL
-            // Việc này cần thiết với Java 5
-            // Java6 tự động tìm kiếm Driver thích hợp.
-            // Nếu bạn dùng Java6, thì ko cần dòng này cũng được.
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Cấu trúc URL Connection dành cho Oracle
-            // Ví dụ: jdbc:mysql://localhost:3306/simplehr
-            String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
-
-            singleton = DriverManager.getConnection(connectionURL, userName, password);
-        }
-
-        return singleton;
+                                                String userName, String password) throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        String connectionURL = "jdbc:mysql://" + hostName + ":3306/" + dbName;
+        return DriverManager.getConnection(connectionURL, userName, password);
     }
 }
