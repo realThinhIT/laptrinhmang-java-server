@@ -1,6 +1,7 @@
 package livestream.models;
 
 import exception.UserDAOException;
+import helpers.CalendarHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -85,9 +86,7 @@ public class UserDAO extends BaseDAO {
         ps.setString(1, username);
         ps.setString(2, UserDAO.sha1Encrypt(password));
         ps.setString(3, name);
-        ps.setTimestamp(4, new java.sql.Timestamp(
-                Calendar.getInstance().getTime().getTime()
-        ));
+        ps.setTimestamp(4, CalendarHelper.getTimestamp());
 
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
