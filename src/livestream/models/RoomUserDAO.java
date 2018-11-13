@@ -3,9 +3,12 @@ package livestream.models;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class RoomUserDAO extends BaseDAO {
-    public RoomUserDAO() {}
+    UserDAO userDAO;
+
+    public RoomUserDAO() { this.userDAO = new UserDAO(); }
 
     public int checkUserAlreadyInRoom(int roomId, int userId) throws SQLException {
         PreparedStatement ps = this.preparedStatement(
@@ -68,5 +71,24 @@ public class RoomUserDAO extends BaseDAO {
         ps.setInt(2, rowId);
 
         return ps.executeUpdate() > 0;
+    }
+
+    public ArrayList<User> getUsersByRoomId(int roomId, int status) throws SQLException {
+        ArrayList<User> roomUsers = new ArrayList<>();
+
+        PreparedStatement ps = this.preparedStatement(
+                "SELECT * FROM `room_users`" +
+                        "WHERE room_id = ?"
+        );
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            roomUsers.add(
+                    userDAO.getUserById(rs.getInt("user_id"))
+            );
+        }
+
+        return null;
     }
 }
