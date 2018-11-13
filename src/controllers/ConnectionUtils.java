@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 public class ConnectionUtils {
 
+    public static Connection db;
+
     public static Connection getMyConnection() throws SQLException,
             ClassNotFoundException {
         return MySQLConnUtils.getMySQLConnection();
@@ -19,10 +21,7 @@ public class ConnectionUtils {
         System.out.println("Get connection ... ");
 
         // Lấy ra đối tượng Connection kết nối vào database.
-        Connection conn = ConnectionUtils.getMyConnection();
-
-        System.out.println("Get connection " + conn);
-
-        System.out.println("Done!");
+        db = ConnectionUtils.getMyConnection();
     }
+
 }
