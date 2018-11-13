@@ -8,12 +8,14 @@ public class RoomMessage implements Serializable {
     private String mContent;
     private String mCreateAt;
     private User mUser;
+    private int mRoomId;
 
-    public RoomMessage(int id, String content, User user, String createAt) {
+    public RoomMessage(int id, String content, User user, String createAt, int roomId) {
         mId = id;
         mContent = content;
         mCreateAt = createAt;
         mUser = user;
+        mRoomId = roomId;
     }
 
     public int getId() {
@@ -46,5 +48,13 @@ public class RoomMessage implements Serializable {
 
     public void setUser(User user) {
         mUser = user;
+    }
+
+    public int getmRoomId() {
+        return mRoomId;
+    }
+
+    public void setmRoomId(int mRoomId) {
+        this.mRoomId = mRoomId;
     }
 }

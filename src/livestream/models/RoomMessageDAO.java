@@ -18,7 +18,8 @@ public class RoomMessageDAO extends BaseDAO {
                 rs.getInt("id"),
                 rs.getString("content"),
                 userDAO.getUserById(rs.getInt("user_id")),
-                rs.getTimestamp("created_at").toString()
+                rs.getTimestamp("created_at").toString(),
+                rs.getInt("room_id")
         );
     }
 
