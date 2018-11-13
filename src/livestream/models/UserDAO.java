@@ -60,7 +60,7 @@ public class UserDAO extends BaseDAO {
 
     public User getUserById(int userId) throws SQLException {
         PreparedStatement ps = this.preparedStatement(
-                "SELECT * FROM `users` WHERE `id` = ?"
+                "SELECT * FROM `users` WHERE `id` = ? LIMIT 1"
         );
         ps.setInt(1, userId);
 
@@ -89,7 +89,7 @@ public class UserDAO extends BaseDAO {
                 Calendar.getInstance().getTime().getTime()
         ));
 
-        ps.executeQuery();
+        ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
 
         if (rs.next()) {

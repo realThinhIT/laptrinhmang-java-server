@@ -17,19 +17,11 @@ public class BaseDAO {
     }
 
     public Statement getStatement() throws SQLException {
-        if (stmt != null) {
-            return stmt;
-        }
-
         stmt = this.connection.createStatement();
         return stmt;
     }
 
     public PreparedStatement preparedStatement(String statement) throws SQLException {
-        if (pstmt != null) {
-            return pstmt;
-        }
-
         pstmt = this.connection.prepareStatement(
                 statement,
                 Statement.RETURN_GENERATED_KEYS
