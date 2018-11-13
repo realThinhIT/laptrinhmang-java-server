@@ -78,8 +78,10 @@ public class RoomUserDAO extends BaseDAO {
 
         PreparedStatement ps = this.preparedStatement(
                 "SELECT * FROM `room_users`" +
-                        "WHERE room_id = ?"
+                        "WHERE room_id = ? AND status = ?"
         );
+        ps.setInt(1, roomId);
+        ps.setInt(2, status);
 
         ResultSet rs = ps.executeQuery();
 
