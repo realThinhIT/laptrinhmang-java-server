@@ -43,7 +43,7 @@ public class RoomMessageDAO extends BaseDAO {
         return roomMessages;
     }
 
-    public int createNewMessageInRoom(int roomId, int userId, String content) throws SQLException {
+    public RoomMessage createNewMessageInRoom(int roomId, int userId, String content) throws SQLException {
         PreparedStatement ps = this.preparedStatement(
                 "INSERT INTO `room_messages` (room_id, user_id, content, createdAt)" +
                         "VALUES (?, ?, ?, ?)"
@@ -56,10 +56,19 @@ public class RoomMessageDAO extends BaseDAO {
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
 
+        int insertedRowId = 0;
         while (rs.next()) {
-            return rs.getInt(1);
+            insertedRowId = rs.getInt(1);
+
+            return new RoomMessage(
+                    insertedRowId,
+                    content,
+                    userDAO.getUserById(userId),
+                    CalendarHelper.getTimestamp().toString(),
+                    roomId
+            );
         }
 
-        return 0;
+        return null;
     }
 }
