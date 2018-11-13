@@ -1,12 +1,14 @@
 package controllers;
 
-import livestream.models.BaseRequest;
-import livestream.models.User;
+import exception.UserDAOException;
+import livestream.models.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,13 +38,40 @@ public class ClientThread extends Thread {
                 BaseRequest baseRequest = (BaseRequest) mObjectInputStream.readObject();
                 if (baseRequest != null) {
                     switch (baseRequest.getTypeRequest()) {
+                        /** Login **/
                         case 0:
-                            loginAccount((User) baseRequest.getData());
+                            User user = loginAccount((User) baseRequest.getData());
+                            if (user == null) {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(0,"Wrong password",null));
+                            } else {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(0,"Login success",user));
+                            }
                             break;
+                        /** Register **/
                         case 1:
+                            if (registerAccount((User) baseRequest.getData()) == 0) {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register failed",null));
+                            } else {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register success",null));
+                            }
                             break;
+                        /** Get all user ( return Arraylist ) **/
                         case 2:
+                            if (getAllUser() != null) {
+                                AllUser allUser = new AllUser(getAllUser());
+                                mObjectOutputStream.writeObject(new BaseRequest<>(2,"Success",allUser));
+                            }
                             break;
+                        case 3:
+                            if (createNewRoom((Room) baseRequest.getData()) == 0){
+                                mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create failed",null));
+                            } else {
+                                if (getRoomById(((Room) baseRequest.getData()).getId()) != null) {
+                                    mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create success",getRoomById(((Room) baseRequest.getData()).getId())));
+                                } else {
+                                    mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create failed",null));
+                                }
+                            }
                         default:
                             break;
                     }
@@ -77,7 +106,58 @@ public class ClientThread extends Thread {
         System.out.println("Client remote address: " + mClientSocket.getRemoteSocketAddress() + " disconnected");
     }
 
-    private void loginAccount(User user) {
+    private User loginAccount(User user) {
         System.out.println(user.getName() + " " + user.getPassword());
+        try {
+            new UserDAO().getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    private int registerAccount(User user) {
+        System.out.println(user.getName() + " " + user.getPassword());
+        try {
+            return new UserDAO().createNewUser(user.getUsername(), user.getPassword(), user.getName());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (UserDAOException e) {
+            try {
+                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Username is already registered",null));
+                return 0;
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    private ArrayList<User> getAllUser() {
+        try {
+            return new UserDAO().getAllUsers();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private int createNewRoom(Room room) {
+        try {
+            return new RoomDAO().createNewRoom(room.getName(),room.getOwner().getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    private Room getRoomById(int roomId) {
+        try {
+            return new RoomDAO().getRoomById(roomId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

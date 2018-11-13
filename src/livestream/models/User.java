@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    private long mId;
+    private int mId;
     private String mUsername;
     private String mPassword;
     private String mName;
     private String mCreatedAt;
 
-    public User(long id, String username, String password, String name, String createdAt) {
+    public User(int id, String username, String password, String name, String createdAt) {
         mId = id;
         mUsername = username;
         mPassword = password;
@@ -18,11 +18,11 @@ public class User implements Serializable {
         mCreatedAt = createdAt;
     }
 
-    public long getId() {
+    public int getId() {
         return mId;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         mId = id;
     }
 

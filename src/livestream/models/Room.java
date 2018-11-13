@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Room implements Serializable {
 
-    private long mId;
+    private int mId;
     private String mName;
     private User mOwner;
     private String mCreatedAt;
@@ -13,7 +13,7 @@ public class Room implements Serializable {
     private List<RoomMessage> mRoomMessages;
     private List<RoomUser> mRoomUsers;
 
-    public Room(long id, String name, User owner, String createdAt, long status, List<RoomMessage> roomMessages, List<RoomUser> roomUsers) {
+    public Room(int id, String name, User owner, String createdAt, long status, List<RoomMessage> roomMessages, List<RoomUser> roomUsers) {
         mId = id;
         mName = name;
         mOwner = owner;
@@ -23,11 +23,11 @@ public class Room implements Serializable {
         mRoomUsers = roomUsers;
     }
 
-    public long getId() {
+    public int getId() {
         return mId;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         mId = id;
     }
 
