@@ -60,6 +60,8 @@ public class ClientThread extends Thread {
                         case 1 :
                             if (registerAccount((User) baseRequest.getData()) == 0) {
                                 mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register failed",null));
+                            } else if (registerAccount((User) baseRequest.getData()) == -1) {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Username is already registered",null));
                             } else {
                                 mObjectOutputStream.writeObject(new BaseRequest<>(1,"Register success",null));
                             }
@@ -201,13 +203,8 @@ public class ClientThread extends Thread {
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (UserDAOException e) {
-            try {
-                mObjectOutputStream.writeObject(new BaseRequest<>(1,"Username is already registered",null));
-                return 0;
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
             e.printStackTrace();
+            return -1;
         }
         return 0;
     }
