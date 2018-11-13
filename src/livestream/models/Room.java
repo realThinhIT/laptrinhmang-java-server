@@ -9,11 +9,11 @@ public class Room implements Serializable {
     private String mName;
     private User mOwner;
     private String mCreatedAt;
-    private long mStatus;
+    private int mStatus;
     private List<RoomMessage> mRoomMessages;
     private List<RoomUser> mRoomUsers;
 
-    public Room(int id, String name, User owner, String createdAt, long status, List<RoomMessage> roomMessages, List<RoomUser> roomUsers) {
+    public Room(int id, String name, User owner, String createdAt, int status, List<RoomMessage> roomMessages, List<RoomUser> roomUsers) {
         mId = id;
         mName = name;
         mOwner = owner;
@@ -55,11 +55,11 @@ public class Room implements Serializable {
         mCreatedAt = createdAt;
     }
 
-    public long getStatus() {
+    public int getStatus() {
         return mStatus;
     }
 
-    public void setStatus(long status) {
+    public void setStatus(int status) {
         mStatus = status;
     }
 

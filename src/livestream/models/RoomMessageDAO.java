@@ -1,20 +1,25 @@
 package livestream.models;
 
+import helpers.CalendarHelper;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class RoomMessageDAO extends BaseDAO {
-    public RoomMessageDAO() {}
+
+    UserDAO userDAO;
+
+    public RoomMessageDAO() { this.userDAO = new UserDAO(); }
 
     public RoomMessage rsCreateRoomMessageFromRs(ResultSet rs) throws SQLException {
-//        return new RoomMessage(
-//                rs.getInt("id"),
-//                rs.getString("content"),
-//
-//        );
-        return null;
+        return new RoomMessage(
+                rs.getInt("id"),
+                rs.getString("content"),
+                userDAO.getUserById(rs.getInt("user_id")),
+                rs.getTimestamp("created_at").toString()
+        );
     }
 
     public ArrayList<RoomMessage> getAllMessagesByRoomId(int roomId) throws SQLException {
@@ -35,5 +40,25 @@ public class RoomMessageDAO extends BaseDAO {
         }
 
         return roomMessages;
+    }
+
+    public int createNewMessageInRoom(int roomId, int userId, String content) throws SQLException {
+        PreparedStatement ps = this.preparedStatement(
+                "INSERT INTO `room_messages` (room_id, user_id, content, createdAt)" +
+                        "VALUES (?, ?, ?, ?)"
+        );
+        ps.setInt(1, roomId);
+        ps.setInt(2, userId);
+        ps.setString(3, content);
+        ps.setTimestamp(4, CalendarHelper.getTimestamp());
+
+        ps.executeUpdate();
+        ResultSet rs = ps.getGeneratedKeys();
+
+        while (rs.next()) {
+            return rs.getInt(1);
+        }
+
+        return 0;
     }
 }

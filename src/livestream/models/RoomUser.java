@@ -5,13 +5,13 @@ import java.io.Serializable;
 
 public class RoomUser implements Serializable {
 
-    private long mId;
-    private long mRoomId;
-    private long mUserId;
-    private long mRequestStatus;
-    private long mStatus;
+    private int mId;
+    private int mRoomId;
+    private int mUserId;
+    private int mRequestStatus;
+    private int mStatus;
 
-    public RoomUser(long id, long roomId, long userId, long requestStatus, long status) {
+    public RoomUser(int id, int roomId, int userId, int requestStatus, int status) {
         mId = id;
         mRoomId = roomId;
         mUserId = userId;
@@ -19,43 +19,43 @@ public class RoomUser implements Serializable {
         mStatus = status;
     }
 
-    public long getId() {
+    public int getId() {
         return mId;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         mId = id;
     }
 
-    public long getRoomId() {
+    public int getRoomId() {
         return mRoomId;
     }
 
-    public void setRoomId(long roomId) {
+    public void setRoomId(int roomId) {
         mRoomId = roomId;
     }
 
-    public long getUserId() {
+    public int getUserId() {
         return mUserId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         mUserId = userId;
     }
 
-    public long getRequestStatus() {
+    public int getRequestStatus() {
         return mRequestStatus;
     }
 
-    public void setRequestStatus(long requestStatus) {
+    public void setRequestStatus(int requestStatus) {
         mRequestStatus = requestStatus;
     }
 
-    public long getStatus() {
+    public int getStatus() {
         return mStatus;
     }
 
-    public void setStatus(long status) {
+    public void setStatus(int status) {
         mStatus = status;
     }
 }
