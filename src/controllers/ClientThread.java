@@ -161,6 +161,12 @@ public class ClientThread extends Thread {
                                 mObjectOutputStream.writeObject(new BaseRequest<>(9,"Failed",null));
                             }
                             break;
+                        case 10 :
+                           if (addUserToRoom((RoomUser) baseRequest.getData()) == 0) {
+                               mObjectOutputStream.writeObject(new BaseRequest<>(10,"Failed",null));
+                           } else {
+                               mObjectOutputStream.writeObject(new BaseRequest<>(10,"Success",null));
+                           }
                         default:
                             break;
                     }
@@ -256,6 +262,15 @@ public class ClientThread extends Thread {
         return null;
     }
 
+    private int addUserToRoom(RoomUser roomUser) {
+        try {
+            return new RoomUserDAO().addUserToRoom(roomUser.getRoomId(),roomUser.getUserId(),roomUser.getUserId(),1,1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     private ArrayList<Room> getAllRoom() {
         ArrayList<Room> allRooms = new ArrayList<>();
         try {
@@ -311,7 +326,7 @@ public class ClientThread extends Thread {
 
     public void pingNewMessage(RoomMessage roomMessage) {
         try {
-            mObjectOutputStream.writeObject(new BaseRequest<>(8,"New message",roomMessage));
+            mObjectOutputStream.writeObject(new BaseRequest<>(20,"New message",roomMessage));
         } catch (IOException e) {
             e.printStackTrace();
         }
