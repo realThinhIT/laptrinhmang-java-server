@@ -84,14 +84,10 @@ public class ClientThread extends Thread {
                          * ReturnedObj: Room
                          *  */
                         case 3 :
-                            if (createNewRoom((Room) baseRequest.getData()) == 0){
+                            if (createNewRoom((Room) baseRequest.getData()) == null){
                                 mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create failed",null));
                             } else {
-                                if (getRoomById(((Room) baseRequest.getData()).getId()) != null) {
-                                    mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create success",getRoomById(((Room) baseRequest.getData()).getId())));
-                                } else {
-                                    mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create failed",null));
-                                }
+                                mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create success",getRoomById(((Room) baseRequest.getData()).getId())));
                             }
                             break;
                         /** Get active rooms
@@ -230,13 +226,13 @@ public class ClientThread extends Thread {
         return null;
     }
 
-    private int createNewRoom(Room room) {
+    private Room createNewRoom(Room room) {
         try {
             return new RoomDAO().createNewRoom(room.getName(),room.getOwner().getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return 0;
+        return null;
     }
 
     private Room getRoomById(int roomId) {
