@@ -5,12 +5,10 @@ import livestream.models.RoomUser;
 import livestream.models.User;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Server implements ClientThread.MessageCallBack {
     private ServerSocket mServerSocket;
@@ -64,15 +62,20 @@ public class Server implements ClientThread.MessageCallBack {
 
     @Override
     public void call(List<RoomUser> userList, RoomMessage roomMessage) {
-        for (int i=0; i<=userList.size(); i++) {
-            int j = i;
-            mThreadNameUserHashMap.forEach((key, value) -> {
-                if (userList.get(j).getUserId() == value.getId()) {
-                    ClientThread clientThread = (ClientThread) getThreadByName(key);
-                    clientThread.pingNewMessage(roomMessage);
-                }
+        ArrayList<String> keys = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>();
+        for (String key : mThreadNameUserHashMap.keySet()) keys.add(key);
+        for (User value : mThreadNameUserHashMap.values()) users.add(value);
+        for (int i=0; i<userList.size(); i++) {
+            RoomUser roomUser = userList.get(i);
+            for (int j = 0; j<users.size(); j++) {
+                System.out.println(users.get(j).toString());
+//                if (roomUser.getUserId() == users.get(j).getId()) {
+//                    ClientThread clientThread = (ClientThread) getThreadByName(keys.get(j));
+//                    clientThread.pingNewMessage(roomMessage);
+//                }
             }
-            );
         }
+
     }
 }
