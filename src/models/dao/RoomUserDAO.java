@@ -83,7 +83,7 @@ public class RoomUserDAO extends BaseDAO {
     }
 
     public List<RoomUser> getRoomUsersByRoomId(int roomId, int status) throws SQLException {
-        ArrayList<RoomUser> roomUsers = new ArrayList<>();
+        List<RoomUser> roomUsers = new ArrayList<>();
 
         PreparedStatement ps = this.preparedStatement(
                 "SELECT * FROM `room_users`" +
@@ -106,7 +106,7 @@ public class RoomUserDAO extends BaseDAO {
             );
         }
 
-        return null;
+        return roomUsers;
     }
 
     public ArrayList<User> getUsersByRoomId(int roomId, int status) throws SQLException {
@@ -127,6 +127,6 @@ public class RoomUserDAO extends BaseDAO {
             );
         }
 
-        return null;
+        return roomUsers;
     }
 }

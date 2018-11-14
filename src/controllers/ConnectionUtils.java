@@ -1,7 +1,13 @@
 package controllers;
 
+import livestream.models.RoomUser;
+import livestream.models.User;
+import models.dao.RoomUserDAO;
+
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConnectionUtils {
 
