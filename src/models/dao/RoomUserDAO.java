@@ -1,11 +1,13 @@
 package models.dao;
 
+import livestream.models.RoomUser;
 import livestream.models.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RoomUserDAO extends BaseDAO {
     UserDAO userDAO;
@@ -78,6 +80,33 @@ public class RoomUserDAO extends BaseDAO {
         ps.setInt(2, rowId);
 
         return ps.executeUpdate() > 0;
+    }
+
+    public List<RoomUser> getRoomUsersByRoomId(int roomId, int status) throws SQLException {
+        ArrayList<RoomUser> roomUsers = new ArrayList<>();
+
+        PreparedStatement ps = this.preparedStatement(
+                "SELECT * FROM `room_users`" +
+                        "WHERE room_id = ? AND status = ?"
+        );
+        ps.setInt(1, roomId);
+        ps.setInt(2, status);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            roomUsers.add(
+                    new RoomUser(
+                            rs.getInt("id"),
+                            roomId,
+                            rs.getInt("room_id"),
+                            rs.getInt("request_status"),
+                            status
+                    )
+            );
+        }
+
+        return null;
     }
 
     public ArrayList<User> getUsersByRoomId(int roomId, int status) throws SQLException {

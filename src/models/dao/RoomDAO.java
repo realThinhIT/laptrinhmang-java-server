@@ -28,7 +28,7 @@ public class RoomDAO extends BaseDAO {
                 rs.getTimestamp("created_at").toString(),
                 rs.getInt("status"),
                 null,
-                null,
+                roomUserDAO.getRoomUsersByRoomId(rs.getInt("id"), 1),
                 roomUserDAO.getUsersByRoomId(rs.getInt("id"), 1)
         );
     }
@@ -95,7 +95,7 @@ public class RoomDAO extends BaseDAO {
                     CalendarHelper.getTimestamp().toString(),
                     Const.STATUS_ROOM_ACTIVE,
                     null,
-                    null,
+                    roomUserDAO.getRoomUsersByRoomId(rs.getInt("id"), 1),
                     roomUserDAO.getUsersByRoomId(insertedRowId, 1)
             );
         }
