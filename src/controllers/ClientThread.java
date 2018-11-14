@@ -155,6 +155,14 @@ public class ClientThread extends Thread {
                                 mObjectOutputStream.writeObject(new BaseRequest<>(8,"Failed",null));
                             }
                             break;
+                        case 9 :
+                            User editUser = editUser((User) baseRequest.getData());
+                            if (editUser != null) {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(9,"Success",editUser));
+                            } else {
+                                mObjectOutputStream.writeObject(new BaseRequest<>(9,"Failed",null));
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -288,6 +296,15 @@ public class ClientThread extends Thread {
     private ArrayList<RoomMessage> getAllMessages(Room room) {
         try {
             return new RoomMessageDAO().getAllMessagesByRoomId(room.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public User editUser(User user) {
+        try {
+            return new UserDAO().editUserById(user.getId(),user.getName(),user.getPassword());
         } catch (SQLException e) {
             e.printStackTrace();
         }
