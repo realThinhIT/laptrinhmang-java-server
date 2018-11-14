@@ -65,7 +65,7 @@ public class RoomDAO extends BaseDAO {
         return null;
     }
 
-    public int createNewRoom(String name, int ownerId) throws SQLException {
+    public Room createNewRoom(String name, int ownerId) throws SQLException {
         PreparedStatement ps = this.preparedStatement(
                 "INSERT INTO `rooms` (name, owner_id, created_at, status)" +
                         "VALUES (?, ?, ?, ?)"
@@ -78,11 +78,22 @@ public class RoomDAO extends BaseDAO {
         ps.executeUpdate();
         ResultSet rs = ps.getGeneratedKeys();
 
+        int insertedRowId = 0;
         if (rs.next()) {
-            return rs.getInt(1);
+            insertedRowId = rs.getInt(1);
+
+            return new Room(
+                    insertedRowId,
+                    name,
+                    userDAO.getUserById(ownerId),
+                    CalendarHelper.getTimestamp().toString(),
+                    Const.STATUS_ROOM_ACTIVE,
+                    null,
+                    null
+            );
         }
 
-        return 0;
+        return null;
     }
 
     public boolean updateRoomStatus(int roomId, int newStatus) throws SQLException {
