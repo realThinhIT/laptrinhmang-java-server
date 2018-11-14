@@ -87,7 +87,7 @@ public class ClientThread extends Thread {
                             if (createNewRoom((Room) baseRequest.getData()) == null){
                                 mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create failed",null));
                             } else {
-                                mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create success",getRoomById(((Room) baseRequest.getData()).getId())));
+                                mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create success",createNewRoom((Room) baseRequest.getData())));
                             }
                             break;
                         /** Get active rooms
