@@ -1,6 +1,7 @@
-package livestream.models;
+package models.dao;
 
 import helpers.CalendarHelper;
+import livestream.models.RoomMessage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

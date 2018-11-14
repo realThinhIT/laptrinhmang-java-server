@@ -1,12 +1,7 @@
 package controllers;
 
-import exception.UserDAOException;
-import livestream.models.User;
-import livestream.models.UserDAO;
-
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class ConnectionUtils {
 

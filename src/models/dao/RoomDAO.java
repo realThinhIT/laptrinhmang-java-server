@@ -1,14 +1,13 @@
-package livestream.models;
+package models.dao;
 
 import config.Const;
-import exception.UserDAOException;
 import helpers.CalendarHelper;
+import livestream.models.Room;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class RoomDAO extends BaseDAO {
 
@@ -81,6 +80,9 @@ public class RoomDAO extends BaseDAO {
         int insertedRowId = 0;
         if (rs.next()) {
             insertedRowId = rs.getInt(1);
+
+            System.out.println("Created " + insertedRowId);
+
 
             return new Room(
                     insertedRowId,

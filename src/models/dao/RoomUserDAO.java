@@ -1,4 +1,6 @@
-package livestream.models;
+package models.dao;
+
+import livestream.models.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
