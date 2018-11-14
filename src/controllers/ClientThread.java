@@ -84,10 +84,11 @@ public class ClientThread extends Thread {
                          * ReturnedObj: Room
                          *  */
                         case 3 :
-                            if (createNewRoom((Room) baseRequest.getData()) == null){
+                            Room newRoom = createNewRoom((Room) baseRequest.getData());
+                            if (newRoom == null){
                                 mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create failed",null));
                             } else {
-                                mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create success",createNewRoom((Room) baseRequest.getData())));
+                                mObjectOutputStream.writeObject(new BaseRequest<>(3,"Create success",newRoom));
                             }
                             break;
                         /** Get active rooms
