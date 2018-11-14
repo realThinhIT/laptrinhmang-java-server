@@ -3,6 +3,7 @@ package models.dao;
 import config.Const;
 import helpers.CalendarHelper;
 import livestream.models.Room;
+import livestream.models.RoomMessage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,9 +13,11 @@ import java.util.ArrayList;
 public class RoomDAO extends BaseDAO {
 
     UserDAO userDAO;
+    RoomUserDAO roomUserDAO;
 
     public RoomDAO() {
         this.userDAO = new UserDAO();
+        this.roomUserDAO = new RoomUserDAO();
     }
 
     public Room rsCreateRoomFromRs(ResultSet rs) throws SQLException {
@@ -25,7 +28,8 @@ public class RoomDAO extends BaseDAO {
                 rs.getTimestamp("created_at").toString(),
                 rs.getInt("status"),
                 null,
-                null
+                null,
+                roomUserDAO.getUsersByRoomId(rs.getInt("id"), 1)
         );
     }
 
@@ -91,7 +95,8 @@ public class RoomDAO extends BaseDAO {
                     CalendarHelper.getTimestamp().toString(),
                     Const.STATUS_ROOM_ACTIVE,
                     null,
-                    null
+                    null,
+                    roomUserDAO.getUsersByRoomId(insertedRowId, 1)
             );
         }
 
