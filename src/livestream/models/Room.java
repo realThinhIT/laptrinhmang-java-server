@@ -1,6 +1,7 @@
 package livestream.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Room implements Serializable {
@@ -12,8 +13,9 @@ public class Room implements Serializable {
     private int mStatus;
     private List<RoomMessage> mRoomMessages;
     private List<RoomUser> mRoomUsers;
+    private ArrayList<User> mUsers;
 
-    public Room(int id, String name, User owner, String createdAt, int status, List<RoomMessage> roomMessages, List<RoomUser> roomUsers) {
+    public Room(int id, String name, User owner, String createdAt, int status, List<RoomMessage> roomMessages, List<RoomUser> roomUsers, ArrayList<User> users) {
         mId = id;
         mName = name;
         mOwner = owner;
@@ -21,6 +23,15 @@ public class Room implements Serializable {
         mStatus = status;
         mRoomMessages = roomMessages;
         mRoomUsers = roomUsers;
+        mUsers = users;
+    }
+
+    public ArrayList<User> getUsers() {
+        return mUsers;
+    }
+
+    public void setUsers(ArrayList<User> users) {
+        mUsers = users;
     }
 
     public int getId() {

@@ -1,21 +1,23 @@
-package livestream.models;
+package models.dao;
 
 import config.Const;
-import exception.UserDAOException;
 import helpers.CalendarHelper;
+import livestream.models.Room;
+import livestream.models.RoomMessage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class RoomDAO extends BaseDAO {
 
     UserDAO userDAO;
+    RoomUserDAO roomUserDAO;
 
     public RoomDAO() {
         this.userDAO = new UserDAO();
+        this.roomUserDAO = new RoomUserDAO();
     }
 
     public Room rsCreateRoomFromRs(ResultSet rs) throws SQLException {
@@ -26,7 +28,8 @@ public class RoomDAO extends BaseDAO {
                 rs.getTimestamp("created_at").toString(),
                 rs.getInt("status"),
                 null,
-                null
+                null,
+                roomUserDAO.getUsersByRoomId(rs.getInt("id"), 1)
         );
     }
 
@@ -82,6 +85,9 @@ public class RoomDAO extends BaseDAO {
         if (rs.next()) {
             insertedRowId = rs.getInt(1);
 
+            System.out.println("Created " + insertedRowId);
+
+
             return new Room(
                     insertedRowId,
                     name,
@@ -89,7 +95,8 @@ public class RoomDAO extends BaseDAO {
                     CalendarHelper.getTimestamp().toString(),
                     Const.STATUS_ROOM_ACTIVE,
                     null,
-                    null
+                    null,
+                    roomUserDAO.getUsersByRoomId(insertedRowId, 1)
             );
         }
 

@@ -1,4 +1,4 @@
-package livestream.models;
+package models.dao;
 
 import controllers.ConnectionUtils;
 

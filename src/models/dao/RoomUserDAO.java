@@ -1,4 +1,6 @@
-package livestream.models;
+package models.dao;
+
+import livestream.models.User;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,6 +31,11 @@ public class RoomUserDAO extends BaseDAO {
     }
 
     public int addUserToRoom(int roomId, int userId, int invitor_id, int request_status, int status) throws SQLException {
+        int roomUserId = checkUserAlreadyInRoom(roomId, userId);
+        if (roomUserId > 0) {
+            return roomUserId;
+        }
+
         PreparedStatement ps = this.preparedStatement(
                 "INSERT INTO `room_users` (room_id, user_id, invitor_id, request_status, status)" +
                         "VALUES (?, ?, ?, ?)"

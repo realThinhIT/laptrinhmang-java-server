@@ -1,11 +1,11 @@
-package livestream.models;
+package models.dao;
 
 import exception.UserDAOException;
 import helpers.CalendarHelper;
+import livestream.models.User;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.security.MessageDigest;
 import java.util.Locale;
 

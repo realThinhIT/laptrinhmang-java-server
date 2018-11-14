@@ -1,6 +1,7 @@
-package livestream.models;
+package models.dao;
 
 import helpers.CalendarHelper;
+import livestream.models.RoomMessage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,7 +46,7 @@ public class RoomMessageDAO extends BaseDAO {
 
     public RoomMessage createNewMessageInRoom(int roomId, int userId, String content) throws SQLException {
         PreparedStatement ps = this.preparedStatement(
-                "INSERT INTO `room_messages` (room_id, user_id, content, createdAt)" +
+                "INSERT INTO `room_messages` (room_id, user_id, content, created_at)" +
                         "VALUES (?, ?, ?, ?)"
         );
         ps.setInt(1, roomId);
