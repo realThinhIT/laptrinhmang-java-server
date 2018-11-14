@@ -4,6 +4,7 @@ import exception.UserDAOException;
 import livestream.models.*;
 import models.dao.RoomDAO;
 import models.dao.RoomMessageDAO;
+import models.dao.RoomUserDAO;
 import models.dao.UserDAO;
 
 import java.io.IOException;
