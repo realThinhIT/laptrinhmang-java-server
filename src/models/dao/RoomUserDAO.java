@@ -17,8 +17,7 @@ public class RoomUserDAO extends BaseDAO {
     public int checkUserAlreadyInRoom(int roomId, int userId) throws SQLException {
         PreparedStatement ps = this.preparedStatement(
                 "SELECT * FROM `room_users`" +
-                        "WHERE room_id = ? AND user_id = ?" +
-                        "LIMIT 1"
+                        "WHERE room_id = ? AND user_id = ?"
         );
         ps.setInt(1, roomId);
         ps.setInt(2, userId);
@@ -40,7 +39,7 @@ public class RoomUserDAO extends BaseDAO {
 
         PreparedStatement ps = this.preparedStatement(
                 "INSERT INTO `room_users` (room_id, user_id, invitor_id, request_status, status)" +
-                        "VALUES (?, ?, ?, ?)"
+                        "VALUES (?, ?, ?, ?, ?)"
         );
         ps.setInt(1, roomId);
         ps.setInt(2, userId);

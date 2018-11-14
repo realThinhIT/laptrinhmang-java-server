@@ -30,6 +30,10 @@ public class ConnectionUtils {
 
             System.out.println("Done!");
 
+//            RoomUserDAO ru = new RoomUserDAO();
+//            int newId = ru.addUserToRoom(1, 8, 1, 1, 1);
+//            System.out.println(newId);
+
             System.out.println("Waiting client connect...");
 
             startServer();
